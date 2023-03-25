@@ -1,0 +1,17 @@
+{
+"classname" "worldspawn"
+"defaultteam" "0"
+"newunit" "0"
+"gametitle" "0"
+"startdark" "0"
+"MaxRange" "4096"
+"sounds" "1"
+"mapversion" "220"
+"wad" ""
+"_generator" "map ported by ceannastar"
+{
+() () () TEXTURE [] [] 0 1 1
+() () () TEXTURE [] [] 0 1 1
+() () () TEXTURE [] [] 0 1 1
+}
+}
