@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{aa6a0d73-6a7b-47d7-a9b0-1a9b1858ed46}</ProjectGuid>
-    <RootNamespace>BSPSource</RootNamespace>
+    <ProjectGuid>{aec0c505-b455-4e2e-9a42-83f93c9be49b}</ProjectGuid>
+    <RootNamespace>MDL</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,8 +127,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="bsp.h" />
-    <ClInclude Include="vector.h" />
+    <ClInclude Include="mdl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
