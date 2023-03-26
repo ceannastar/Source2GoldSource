@@ -10,10 +10,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 class BSPH
 {
 private:
+
+	struct planeHeader
+	{
+		float normal[3];
+		float dist;
+		int type;
+	};
 
 	struct vertexHeader
 	{
@@ -55,20 +64,97 @@ private:
 
 private:
 
-	bool read_brushes(std::ifstream& file, int offsetofbrushes, int offsetofsides, int sizeofbrushes, int sizeofsides)
+	bool getting_vertices_of_plane(planeHeader* planes, int sizeofplanes)
 	{
+		std::vector<vertexHeader> tempVertices;
+		for (int i = 0; i < sizeofplanes; i++)
+		{
+			for (int j = 0; j < sizeofplanes; j++)
+			{
+				for (int k = 0; k < sizeofplanes; k++)
+				{
+					if ((i==j)||(i==k)||(j==k))
+						break;
+					if ((planes[i].type!= planes[j].type)&&(planes[i].type != planes[k].type)&&(planes[j].type != planes[k].type))
+					{
+							float x = planes[i].normal[0] * planes[i].dist + planes[j].normal[0] * planes[j].dist + planes[k].normal[0] * planes[k].dist;
+							float y = planes[i].normal[1] * planes[i].dist + planes[j].normal[1] * planes[j].dist + planes[k].normal[1] * planes[k].dist;
+							float z = planes[i].normal[2] * planes[i].dist + planes[j].normal[2] * planes[j].dist + planes[k].normal[2] * planes[k].dist;
+							vertexHeader temp;
+							temp.x = x; temp.y = y; temp.z = z;
+							tempVertices.push_back(temp);
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < tempVertices.size(); i++)
+			std::cout << "( " << tempVertices[i].x << " " << tempVertices[i].y << " " << tempVertices[i].z << " )" << std::endl;
+
+		return true;
+	}
+
+	planeHeader* read_planes(std::ifstream& file, int offsetofplanes, int sizeofplanes)
+	{
+		planeHeader* header = new planeHeader[sizeofplanes/20];
+
+		file.seekg(offsetofplanes);
+
+		for (int i = 0; i < sizeofplanes / 20; ++i)
+		{
+			file.read((char*)&header[i], sizeof header[i]);
+		}
+		
+		return header;
+	}
+
+	vertexHeader* read_vertices(std::ifstream& file, int offsetovertices, int sizeofvertices)
+	{
+		vertexHeader* vertices = new vertexHeader[sizeofvertices/12];
+
+		file.seekg(offsetovertices);
+
+		for (int i = 0; i < sizeofvertices / 12; ++i)
+		{
+			file.read((char*)&vertices[i], sizeof vertices[i]);
+			//std::cout << "(" << vertices[i].x << ";" << vertices[i].y << ";" << vertices[i].z << ") " << std::endl;
+		}
+		//std::cout << std::endl;
+
+		return vertices;
+	}
+
+	bool read_brushes(std::ifstream& file, int offsetofbrushes, int offsetofsides, int sizeofbrushes, int sizeofsides, planeHeader* planes)
+	{
+
+		file.seekg(offsetofsides);
+
+		brushSideHeader* brushSides = new brushSideHeader[(sizeofsides / 8)];
+		//planeHeader* tempplanes = new planeHeader[sizeofsides / 8];
+
+		for (int i = 0; i < sizeofsides/8; ++i)
+		{
+			file.read((char*)&brushSides[i], sizeof brushSides[i]);
+			//tempplanes[i] = planes[brushSides[i].planenum];
+			//std::cout << "(" << planes[brushSides[i].planenum].normal[0] << ";" << planes[brushSides[i].planenum].normal[1] << ";" << planes[brushSides[i].planenum].normal[2] << ") " << planes[brushSides[i].planenum].dist << " " << planes[brushSides[i].planenum].type << std::endl;
+		}
+		//std::cout << std::endl;
+		//getting_vertices_of_plane(tempplanes, sizeofsides / 8);
 
 		file.seekg(offsetofbrushes);
 
 		brushHeader* brushes = new brushHeader[(sizeofbrushes /12)];
-		brushSideHeader* brushSides = new brushSideHeader[(sizeofsides/8)];
 
 		for (int i = 0; i < sizeofbrushes / 12; ++i)
 		{
-			file.read((char*)&brushes, sizeof brushes);
-			std::cout << brushes[i].firstSide << std::endl;
+			file.read((char*)&brushes[i], sizeof brushes[i]);
+			for (int k = 0; k < brushes[i].numSides; k++)
+			{
+				std::cout << planes[brushSides[brushes[i].firstSide + k].planenum].normal[0] << " " << planes[brushSides[brushes[i].firstSide + k].planenum].normal[1] << " " << planes[brushSides[brushes[i].firstSide + k].planenum].normal[2] << " - " << planes[brushSides[brushes[i].firstSide + k].planenum].dist << " - " << planes[brushSides[brushes[i].firstSide + k].planenum].type << std::endl;
+			}
+			std::cout << std::endl;
 		}
-
+		
 		return true;
 	}
 
@@ -80,7 +166,7 @@ public:
 		std::ifstream file(filename+".bsp", std::ios::in | std::ios::binary);
 
 		file.seekg(file.end);
-		int filesize = file.tellg();
+		int filesize = (int)file.tellg();
 		file.seekg(file.beg);
 
 		bspHeader* bspFile = new bspHeader;
@@ -91,7 +177,9 @@ public:
 			file.read((char*)&bspFile->lumps[i], sizeof bspFile->lumps[i]);
 		file.read((char*)&bspFile->mapRevision, sizeof bspFile->mapRevision);
 
-		read_brushes(file, bspFile->lumps[18].fileofs, bspFile->lumps[19].fileofs, bspFile->lumps[18].filelen, bspFile->lumps[19].filelen);
+		planeHeader* planes = read_planes(file, bspFile->lumps[1].fileofs, bspFile->lumps[1].filelen);
+		//read_vertices(file, bspFile->lumps[3].fileofs, bspFile->lumps[3].filelen);
+		read_brushes(file, bspFile->lumps[18].fileofs, bspFile->lumps[19].fileofs, bspFile->lumps[18].filelen, bspFile->lumps[19].filelen, planes);
 
 		file.close();
 
