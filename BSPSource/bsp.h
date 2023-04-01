@@ -77,6 +77,11 @@ private:
 						break;
 					if ((planes[i].type != planes[j].type) && (planes[i].type != planes[k].type) && (planes[j].type != planes[k].type))
 					{
+						if (num == 3)
+						{
+							num = 0;
+							break;
+						}
 							float x = planes[i].normal[0] * planes[i].dist + planes[j].normal[0] * planes[j].dist + planes[k].normal[0] * planes[k].dist;
 							float y = planes[i].normal[1] * planes[i].dist + planes[j].normal[1] * planes[j].dist + planes[k].normal[1] * planes[k].dist;
 							float z = planes[i].normal[2] * planes[i].dist + planes[j].normal[2] * planes[j].dist + planes[k].normal[2] * planes[k].dist;
