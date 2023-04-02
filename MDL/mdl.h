@@ -166,6 +166,22 @@ private:
 		int topologyOffset;
 	};
 
+	struct stripHeader
+	{
+		int numIndices;
+		int indexOffset;
+
+		int numVerts;
+		int vertOffset;
+
+		short numBones;
+
+		unsigned char flags;
+
+		int numBoneStateChanges;
+		int boneStateChangeOffset;
+	};
+
 private:
 
 	vertexHeader* vertices = nullptr;
@@ -186,6 +202,7 @@ public:
 
 		file.read((char*)&studio->id, sizeof studio->id);
 		file.read((char*)&studio->version, sizeof studio->version);
+		std::cout << studio->version << std::endl;
 		file.read((char*)&studio->checksum, sizeof studio->checksum);
 		for(int i = 0; i < 64; ++i)
 			file.read((char*)&studio->name[i], sizeof studio->name[i]);
@@ -305,7 +322,7 @@ public:
 	bool read_vtx(std::string filename)
 	{
 
-		std::ifstream file(filename+".dx90.vtx", std::ios::in | std::ios::binary);
+		std::ifstream file(filename+".dx80.vtx", std::ios::in | std::ios::binary);
 
 		vtxHeader* vtx = new vtxHeader;
 
@@ -391,35 +408,6 @@ public:
 		filesmd.write("end", std::strlen("end")); filesmd.write("\n", 1);
 
 		filesmd.write("triangles", std::strlen("triangles")); filesmd.write("\n", 1);
-
-		
-		for (int i = 0; i < stripGroup->numIndices; i=i+3)
-		{
-			if ((i+2)>= stripGroup->numIndices)
-				break;
-			filesmd.write("material.bmp", std::strlen("material.bmp")); filesmd.write("\n", 1);
-			std::ostringstream xyznxnynzuv;
-			xyznxnynzuv << vertices[edges[i+2]].vecPos[0] << " " << vertices[edges[i]].vecPos[1] << " " << vertices[edges[i]].vecPos[2] << " " << vertices[edges[i]].vecNormal[0] << " " << vertices[edges[i]].vecNormal[1] << " " << vertices[edges[i]].vecNormal[2] << " " << vertices[edges[i]].texCoord[0] << " " << vertices[edges[i]].texCoord[1];
-			std::string xyznxnynzuvTemp(xyznxnynzuv.str());
-			filesmd.write("  0 ", std::strlen("  0 ")); filesmd.write(xyznxnynzuvTemp.c_str(), xyznxnynzuvTemp.size()); filesmd.write("\n", 1);
-
-			std::ostringstream xyznxnynzuv1;
-			xyznxnynzuv1 << vertices[edges[i+1]].vecPos[0] << " " << vertices[edges[i + 1]].vecPos[1] << " " << vertices[edges[i + 1]].vecPos[2] << " " << vertices[edges[i + 1]].vecNormal[0] << " " << vertices[edges[i + 1]].vecNormal[1] << " " << vertices[edges[i + 1]].vecNormal[2] << " " << vertices[edges[i + 1]].texCoord[0] << " " << vertices[edges[i + 1]].texCoord[1];
-			std::string xyznxnynzuvTemp1(xyznxnynzuv1.str());
-			filesmd.write("  0 ", std::strlen("  0 ")); filesmd.write(xyznxnynzuvTemp1.c_str(), xyznxnynzuvTemp1.size()); filesmd.write("\n", 1);
-
-			std::ostringstream xyznxnynzuv2;
-			xyznxnynzuv2 << vertices[edges[i+2]].vecPos[0] << " " << vertices[edges[i + 2]].vecPos[1] << " " << vertices[edges[i + 2]].vecPos[2] << " " << vertices[edges[i + 2]].vecNormal[0] << " " << vertices[edges[i + 2]].vecNormal[1] << " " << vertices[edges[i + 2]].vecNormal[2] << " " << vertices[edges[i + 2]].texCoord[0] << " " << vertices[edges[i + 2]].texCoord[1];
-			std::string xyznxnynzuvTemp2(xyznxnynzuv2.str());
-			filesmd.write("  0 ", std::strlen("  0 ")); filesmd.write(xyznxnynzuvTemp2.c_str(), xyznxnynzuvTemp2.size()); filesmd.write("\n", 1);
-			std::cout << edges[i] << " - " << edges[i + 1] << " - " << edges[i + 2] << std::endl;
-			std::cout << "(" << vertices[edges[i]].vecPos[0] << " " << vertices[edges[i]].vecPos[1] << " " << vertices[edges[i]].vecPos[2] << ") ";
-			std::cout << "(" << vertices[edges[i+1]].vecPos[0] << " " << vertices[edges[i + 1]].vecPos[1] << " " << vertices[edges[i + 1]].vecPos[2] << ") ";
-			std::cout << "(" << vertices[edges[i+2]].vecPos[0] << " " << vertices[edges[i+2]].vecPos[1] << " " << vertices[edges[i+2]].vecPos[2] << ") ";
-			std::cout << std::endl << std::endl;
-			
-			
-		}
 
 		filesmd.write("end", std::strlen("end")); filesmd.write("\n", 1);
 
