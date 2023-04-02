@@ -2,7 +2,7 @@
 /*
 	Created: 03/26/2023
 	Written by Alexandr Sotnikov
-	File: map.h
+	File: smd.h
 */
 
 #pragma once

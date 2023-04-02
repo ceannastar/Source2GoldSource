@@ -20,7 +20,7 @@ public:
 	MAPH() {}
 	~MAPH() {}
 
-	bool write_map_header(std::string filename)
+	bool write_map_header(std::string filename, int sizeofverts)
 	{
 		std::ofstream file(filename+".map", std::ios::out);
 

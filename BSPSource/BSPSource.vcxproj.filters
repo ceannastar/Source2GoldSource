@@ -4,4 +4,7 @@
     <ClInclude Include="bsp.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
 </Project>

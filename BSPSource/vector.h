@@ -2,16 +2,19 @@
 /*
 	Created: 03/26/2023
 	Written by Alexandr Sotnikov
-	File: map.h
+	File: vector.h
 */
 
 #pragma once
 
-class VECTORH
+struct vertexHeader
 {
-private:
+	float x;
+	float y;
+	float z;
+};
 
-public:
-
-
+struct planesverts
+{
+	vertexHeader verts[3];
 };

@@ -2,7 +2,7 @@
 /*
 	Created: 03/25/2023
 	Written by Alexandr Sotnikov
-	File: map.h
+	File: mdl.h
 */
 
 #pragma once
@@ -397,7 +397,7 @@ public:
 		{
 			if ((i+2)>= stripGroup->numIndices)
 				break;
-			/*filesmd.write("material.bmp", std::strlen("material.bmp")); filesmd.write("\n", 1);
+			filesmd.write("material.bmp", std::strlen("material.bmp")); filesmd.write("\n", 1);
 			std::ostringstream xyznxnynzuv;
 			xyznxnynzuv << vertices[edges[i+2]].vecPos[0] << " " << vertices[edges[i]].vecPos[1] << " " << vertices[edges[i]].vecPos[2] << " " << vertices[edges[i]].vecNormal[0] << " " << vertices[edges[i]].vecNormal[1] << " " << vertices[edges[i]].vecNormal[2] << " " << vertices[edges[i]].texCoord[0] << " " << vertices[edges[i]].texCoord[1];
 			std::string xyznxnynzuvTemp(xyznxnynzuv.str());
@@ -411,7 +411,7 @@ public:
 			std::ostringstream xyznxnynzuv2;
 			xyznxnynzuv2 << vertices[edges[i+2]].vecPos[0] << " " << vertices[edges[i + 2]].vecPos[1] << " " << vertices[edges[i + 2]].vecPos[2] << " " << vertices[edges[i + 2]].vecNormal[0] << " " << vertices[edges[i + 2]].vecNormal[1] << " " << vertices[edges[i + 2]].vecNormal[2] << " " << vertices[edges[i + 2]].texCoord[0] << " " << vertices[edges[i + 2]].texCoord[1];
 			std::string xyznxnynzuvTemp2(xyznxnynzuv2.str());
-			filesmd.write("  0 ", std::strlen("  0 ")); filesmd.write(xyznxnynzuvTemp2.c_str(), xyznxnynzuvTemp2.size()); filesmd.write("\n", 1);*/
+			filesmd.write("  0 ", std::strlen("  0 ")); filesmd.write(xyznxnynzuvTemp2.c_str(), xyznxnynzuvTemp2.size()); filesmd.write("\n", 1);
 			std::cout << edges[i] << " - " << edges[i + 1] << " - " << edges[i + 2] << std::endl;
 			std::cout << "(" << vertices[edges[i]].vecPos[0] << " " << vertices[edges[i]].vecPos[1] << " " << vertices[edges[i]].vecPos[2] << ") ";
 			std::cout << "(" << vertices[edges[i+1]].vecPos[0] << " " << vertices[edges[i + 1]].vecPos[1] << " " << vertices[edges[i + 1]].vecPos[2] << ") ";
